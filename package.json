@@ -1,0 +1,19 @@
+{
+  "name": "gucx-alfred-gitlab",
+  "version": "1.1.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@gitbeaker/node": "^35.7.0",
+    "alfy": "^1.0.0"
+  },
+  "scripts": {
+    "preuninstall": "alfy-cleanup",
+    "postinstall": "alfy-init",
+    "release": "standard-version && npm publish --registry https://registry.npmjs.org"
+  },
+  "type": "module",
+  "devDependencies": {
+    "standard-version": "^9.5.0"
+  }
+}
