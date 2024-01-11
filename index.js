@@ -1,14 +1,9 @@
 import alfy from "alfy";
 import { Gitlab } from "@gitbeaker/node";
 
-/**
- * 判断是否是有效缓存
- */
-const isValidCache = (key) => alfy.cache.has(key) && !alfy.cache.isExpired(key);
-
 const { HOST, TOKEN } = process.env;
 if (!(HOST && TOKEN)) {
-  alfy.error('Please set "HOST" and "TOKEN" workflow variables.');
+  alfy.error("请设置 HOST 和 TOKEN 环境变量");
 } else {
   const api = new Gitlab({
     token: TOKEN,
@@ -59,31 +54,49 @@ if (!(HOST && TOKEN)) {
   // 没有输入，展示菜单
   if (!alfy.input) {
     alfy.output(menu);
-  } else if (!isValidCache("projects")) {
-    // 防重，没有获取时先提示一下，下次一获取中会卡住
-    if (!isValidCache("gettingProjects")) {
-      // 提示获取列表中，3s 重试一次
+  } else if (!alfy.cache.has("projects")) {
+    // 无缓存时获取项目数据
+    const passTime = alfy.cache.get("gettingProjects");
+    // 获取中，轮询检查一次是否完成
+    if (passTime) {
       alfy.output(
         [
           {
-            title: `Updating indices`,
+            title: `更新项目索引中... ${Math.round(
+              (Date.now() - passTime) / 1000
+            )}s`,
           },
         ],
         {
-          rerunInterval: 1,
+          rerunInterval: 0.4,
         }
       );
+    } else if (passTime === 0) {
       // 设置标志位
-      alfy.cache.set("gettingProjects", true, { maxAge: 5 * 1000 });
-    } else {
+      alfy.cache.set("gettingProjects", Date.now(), { maxAge: 60 * 1000 });
       // 获取全部项目
-      const projects = await api.Projects.all();
-      // 缓存项目 30 天
-      alfy.cache.set("projects", projects, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+      api.Projects.all().then((projects) => {
+        // 缓存项目 30 天
+        alfy.cache.set("projects", projects, {
+          maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+        // 清除标志位
+        alfy.cache.delete("gettingProjects");
       });
-      // 清除标志位
-      alfy.cache.delete("gettingProjects");
+    } else {
+      // 还未获取，则提示退出再试，启动请求
+      alfy.output(
+        [
+          {
+            title: "更新项目索引中，请退出稍后再试",
+          },
+        ],
+        {
+          rerunInterval: 0.1,
+        }
+      );
+      // 设置 0 标识提示了，但还没启动请求
+      alfy.cache.set("gettingProjects", 0, { maxAge: 60 * 1000 });
     }
   } else {
     const projects = alfy.cache.get("projects");

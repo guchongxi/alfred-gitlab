@@ -168,7 +168,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Browse GitLab issues</string>
+				<string>GitLab issues</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -217,7 +217,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Browse GitLab merge requests</string>
+				<string>GitLab merge requests</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -305,7 +305,7 @@
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string></string>
+				<string>检查缓存存在性和有效性...</string>
 				<key>script</key>
 				<string>./node_modules/.bin/run-node remove.js "$1"</string>
 				<key>scriptargtype</key>
@@ -315,7 +315,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Clear cache</string>
+				<string>清理项目缓存数据</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -426,7 +426,7 @@
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string>Searching repo for {query}</string>
+				<string>获取菜单...</string>
 				<key>script</key>
 				<string>./node_modules/.bin/run-node index.js "$1"</string>
 				<key>scriptargtype</key>
@@ -436,7 +436,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Browse DXY GitLab</string>
+				<string>DXY GitLab</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -526,7 +526,7 @@
 	<key>variables</key>
 	<dict>
 		<key>HOST</key>
-		<string></string>
+		<string>https://gitlab.dxy.net</string>
 		<key>TOKEN</key>
 		<string></string>
 	</dict>
